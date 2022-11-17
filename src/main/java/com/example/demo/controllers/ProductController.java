@@ -2,36 +2,44 @@ package com.example.demo.controllers;
 
 import com.example.demo.models.Product;
 import com.example.demo.models.ReturnValue;
+import com.example.demo.repositories.ProductRepository;
 import net.bytebuddy.asm.Advice;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @RestController
-@RequestMapping(path = "/")
+@RequestMapping(path = "/api")
 public class ProductController {
-    @GetMapping("/ec")
-    List<Product> getAllProducts() {
-//        return List.of("Iphone", "Ipad");
-//        ArrayList<Product> a = new ArrayList<Product>();
-//        a.add();
-//        a.add();
-//        ReturnValue b = new ReturnValue(1, "Da select thanh cong toan bo san pham", List.of(new Product("p2", "456"), new Product("p3", "44456")));
-        return List.of(new Product("p2", "456"), new Product("p3", "44456"));
+    @Autowired
+    private ProductRepository repository;
+
+    @GetMapping("/product")
+    ReturnValue getAllProducts() {
+        return new ReturnValue(1, "success", repository.findAll());
+    }
+
+    @GetMapping("/product/{id}")
+    ReturnValue getProductById(@PathVariable Long id) {
+        Optional<Product> findById = repository.findById(id);
+        if (findById.isPresent()) {
+            return new ReturnValue(1, "success", findById.stream().toList());
+        } else {
+            return new ReturnValue(0, "fail to get product by id "+id, "");
+        }
+    }
+
+    @PostMapping("/addProduct")
+    ReturnValue addProduct(@RequestBody Product product) {
+        List<Product> products = repository.findByName(product.getName());
+        if (products.size()>0) {
+            return new ReturnValue(0, "Duplicated product name", "");
+        }
+        return new ReturnValue(1, "success", repository.save(product));
     }
 }
-
-//localhost:8080/products
-//
-//        {
-//            "code": "1",
-//            "message": "Da select thanh cong toan bo san pham",
-//            "data": {
-//                { name: "p1", price: "21k"},
-//                { name: "p2"},
-//            }
-//        }
