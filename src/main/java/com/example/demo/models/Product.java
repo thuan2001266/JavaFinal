@@ -10,13 +10,16 @@ public class Product {
 
     String name;
     String price;
-    @Column
+    @Column(name = "color")
+    @CollectionTable(name = "color", joinColumns = @JoinColumn(name = "productId"))
     @ElementCollection(targetClass=String.class)
     List<String> color;
-    @Column
+    @Column(name = "img")
+    @CollectionTable(name = "img", joinColumns = @JoinColumn(name = "productId"))
     @ElementCollection(targetClass=String.class)
     List<String> img;
-    @Column
+    @Column(name = "option")
+    @CollectionTable(name = "option", joinColumns = @JoinColumn(name = "productId"))
     @ElementCollection(targetClass=String.class)
     List<String> option;
     String discount;
