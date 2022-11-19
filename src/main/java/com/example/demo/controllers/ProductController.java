@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -36,20 +37,31 @@ public class ProductController {
         }
     }
 
+    @GetMapping("/product/type/{type}")
+    ReturnValue getProductByType(@PathVariable String type) {
+        List<Product> findByType = repository.findByType(type);
+        if (findByType.size()>0) {
+            return new ReturnValue(1, "success", findByType);
+        } else {
+            return new ReturnValue(0, "fail to get product by type "+type, "");
+        }
+    }
+
     @PostMapping("/addProduct")
     ReturnValue addProduct(@RequestBody Product product) {
         List<Product> products = repository.findByName(product.getName());
         if (products.size()>0) {
             return new ReturnValue(0, "Duplicated product name", "");
         }
+        LocalDate tempdate = LocalDate.now();
+        product.setDate(tempdate.getYear()*10000+tempdate.getMonthValue()*100+tempdate.getDayOfMonth());
         return new ReturnValue(1, "success", repository.save(product));
     }
 
     @PutMapping("/updateProduct/{id}")
     ReturnValue updateProduct(@RequestBody Product newProduct, @PathVariable Long id) {
-        Product product = repository.findById(id).map(e -> {
+        ReturnValue rv = repository.findById(id).map(e -> {
             e.setName(newProduct.getName());
-            e.setDate(newProduct.getDate());
             e.setDiscount(newProduct.getDiscount());
             e.setImg(newProduct.getImg());
             e.setModel(newProduct.getModel());
@@ -57,12 +69,14 @@ public class ProductController {
             e.setColor(newProduct.getColor());
             e.setPrice(newProduct.getPrice());
             e.setType(newProduct.getType());
-            return repository.save(e);
+            repository.save(e);
+            return new ReturnValue(1, "success", e);
         }).orElseGet(() -> {
-            newProduct.setId(id);
-            return repository.save(newProduct);
+            Product nP = newProduct;
+            nP.setId(id);
+            return addProduct(newProduct);
         });
-        return new ReturnValue(1, "success", "");
+        return rv;
     }
 
     @DeleteMapping("/deleteProduct/{id}")

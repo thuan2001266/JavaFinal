@@ -3,13 +3,24 @@ package com.example.demo.models;
 import javax.persistence.*;
 import java.util.List;
 @Entity
+@Table(name = "product")
 public class Product {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+//    @SequenceGenerator(
+//            name = "product_sequence",
+//            sequenceName = "product_sequence",
+//            allocationSize = 1
+//    )
+    @GeneratedValue(
+//            strategy = GenerationType.SEQUENCE,
+//            generator = "product_sequence"
+    )
     private Long id;
-
     String name;
-    String price;
+    @Column(name = "price")
+    @CollectionTable(name = "price", joinColumns = @JoinColumn(name = "productId"))
+    @ElementCollection(targetClass=String.class)
+    List<String> price;
     @Column(name = "color")
     @CollectionTable(name = "color", joinColumns = @JoinColumn(name = "productId"))
     @ElementCollection(targetClass=String.class)
@@ -27,12 +38,10 @@ public class Product {
     String type;
     String model;
 
-
-
     public Product() {
     }
 
-    public Product(String name, String price, List<String> color, List<String> img, List<String> option, String discount, int date, String type, String model) {
+    public Product(String name, List<String> price, List<String> color, List<String> img, List<String> option, String discount, int date, String type, String model) {
         this.name = name;
         this.price = price;
         this.color = color;
@@ -60,11 +69,11 @@ public class Product {
         this.name = name;
     }
 
-    public String getPrice() {
+    public List<String> getPrice() {
         return price;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(List<String> price) {
         this.price = price;
     }
 
