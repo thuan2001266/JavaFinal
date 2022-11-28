@@ -3,28 +3,56 @@ package com.example.demo.controllers;
 import com.example.demo.models.Product;
 import com.example.demo.models.ReturnValue;
 import com.example.demo.repositories.ProductRepository;
-import net.bytebuddy.asm.Advice;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "/api")
+@CrossOrigin(origins = "http://localhost:3000")
 public class ProductController {
+
+    Logger logger = LoggerFactory.getLogger(ProductController.class);
     @Autowired
     private ProductRepository repository;
 
     @GetMapping("/product")
     ReturnValue getAllProducts() {
         return new ReturnValue(1, "success", repository.findAll());
+    }
+
+    @GetMapping("/product/search/{text}")
+    @CrossOrigin(origins = "http://localhost:3000")
+    ReturnValue getProductByText(@PathVariable String text) {
+        List<Product> findByText = repository.findByNameContains(text);
+        if (findByText.size() > 0) {
+            return new ReturnValue(1, "success", findByText);
+        } else {
+            return new ReturnValue(0, "fail to get product by key word "+text, "");
+        }
+    }
+
+    @PostMapping("/product/cart")
+    @CrossOrigin()
+    ReturnValue getCart(@RequestBody ArrayList<String> text) {
+        List<Product> findById = new ArrayList<>();
+        if (text.size() > 0) {
+            for (String p : text)
+            {
+                findById.add(repository.findById(Long.parseLong(p)).stream().toList().get(0));
+            }
+        }
+        if (findById.size() > 0) {
+            return new ReturnValue(1, "success", findById);
+        } else {
+            return new ReturnValue(0, "fail to get products cart", "");
+        }
     }
 
     @GetMapping("/product/{id}")

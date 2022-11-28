@@ -1,17 +1,15 @@
 package com.example.demo.database;
 
-import com.example.demo.models.Product;
 import com.example.demo.repositories.ProductRepository;
+import com.example.demo.repositories.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.List;
-
 @Configuration
 public class database {
     @Bean
-    CommandLineRunner initDatabase(ProductRepository productRepository) {
+    CommandLineRunner initDatabase(ProductRepository productRepository, UserRepository userRepository) {
         return new CommandLineRunner() {
             @Override
             public void run(String... args) throws Exception {
@@ -33,6 +31,7 @@ public class database {
 //                                "512GB"), "", 20220911, "iphone", "iPhone 14");
 //                System.out.println(productRepository.save(p1));
 //                System.out.println(productRepository.save(p2));
+//                userRepository.save(new AppUser("name","email","password"));
 
             }
         };

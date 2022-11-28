@@ -1,7 +1,7 @@
 package com.example.demo.models;
 
-//public class Receipt {
+public class Receipt {
 //    int id;
 //    int userId;
 //    Líst<ProductnQuantity> product;
-//}
+}
