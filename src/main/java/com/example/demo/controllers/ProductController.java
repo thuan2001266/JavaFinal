@@ -39,7 +39,7 @@ public class ProductController {
     }
 
     @PostMapping("/product/cart")
-    @CrossOrigin()
+    @CrossOrigin(origins = "http://localhost:3000")
     ReturnValue getCart(@RequestBody ArrayList<String> text) {
         List<Product> findById = new ArrayList<>();
         if (text.size() > 0) {
@@ -75,7 +75,7 @@ public class ProductController {
         }
     }
 
-    @PostMapping("/addProduct")
+    @PostMapping("/manage/addProduct")
     ReturnValue addProduct(@RequestBody Product product) {
         List<Product> products = repository.findByName(product.getName());
         if (products.size()>0) {
@@ -86,7 +86,7 @@ public class ProductController {
         return new ReturnValue(1, "success", repository.save(product));
     }
 
-    @PutMapping("/updateProduct/{id}")
+    @PutMapping("/manage/updateProduct/{id}")
     ReturnValue updateProduct(@RequestBody Product newProduct, @PathVariable Long id) {
         ReturnValue rv = repository.findById(id).map(e -> {
             e.setName(newProduct.getName());
@@ -107,7 +107,7 @@ public class ProductController {
         return rv;
     }
 
-    @DeleteMapping("/deleteProduct/{id}")
+    @DeleteMapping("/manage/deleteProduct/{id}")
     ReturnValue deleteProduct(@PathVariable Long id) {
         boolean exists = repository.existsById(id);
         if(exists) {

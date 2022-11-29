@@ -28,6 +28,7 @@ public class UserController {
 
     @PostMapping("/role/save")
     public ReturnValue saveRole(@RequestBody Role role) {
+        User user = userService.getUser("asd");
         return new ReturnValue(1, "success", userService.saveRole(role));
     }
 
@@ -37,15 +38,15 @@ public class UserController {
         return new ReturnValue(1, "success", "");
     }
 
-    @PostMapping("/login")
-    @CrossOrigin()
-    ReturnValue login(@RequestBody LoginInfo u) {
-        logger.info(u.toString());
-        User user = userService.getUser(u.getName());
-        if (user != null) {
-            return new ReturnValue(1, "success", "");
-        } else {
-            return new ReturnValue(0, "login fail", "");
-        }
-    }
+//    @PostMapping("/login")
+//    @CrossOrigin()
+//    ReturnValue login(@RequestBody LoginInfo u) {
+//        logger.info(u.toString());
+//        User user = userService.getUser(u.getName());
+//        if (user != null) {
+//            return new ReturnValue(1, "success", "");
+//        } else {
+//            return new ReturnValue(0, "login fail", "");
+//        }
+//    }
 }
