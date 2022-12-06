@@ -5,7 +5,6 @@ import com.example.demo.models.Role;
 import com.example.demo.repositories.RoleRepository;
 import com.example.demo.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -40,6 +39,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    public void enableUser(String username) {
+        User user = userRepo.findByName(username);
+        user.setEnabled(true);
+    }
+
+    @Override
     public Role saveRole(Role role) {
         return roleRepo.save(role);
     }
@@ -54,6 +59,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public User getUser(String username) {
         return userRepo.findByName(username);
+    }
+
+    @Override
+    public User getByEmail(String email) {
+        return userRepo.findByEmail(email);
     }
 
     @Override
@@ -73,4 +83,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         });
         return new org.springframework.security.core.userdetails.User(user.getName(), user.getPassword(), authorities);
     }
+
+
 }

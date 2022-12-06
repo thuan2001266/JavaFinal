@@ -1,6 +1,8 @@
 package com.example.demo.models;
 
 import javax.persistence.*;
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.List;
 @Entity
 @Table(name = "product")
@@ -135,6 +137,17 @@ public class Product {
 
     @Override
     public String toString() {
-        return id+"";
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", color=" + color +
+                ", img=" + img +
+                ", option=" + option +
+                ", discount='" + discount + '\'' +
+                ", date=" + date +
+                ", type='" + type + '\'' +
+                ", model='" + model + '\'' +
+                '}';
     }
 }

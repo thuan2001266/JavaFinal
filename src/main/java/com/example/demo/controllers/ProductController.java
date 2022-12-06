@@ -3,28 +3,48 @@ package com.example.demo.controllers;
 import com.example.demo.models.Product;
 import com.example.demo.models.ReturnValue;
 import com.example.demo.repositories.ProductRepository;
+import com.example.demo.repositories.ReceiptRepository;
+import com.example.demo.services.ProductService;
+import com.example.demo.services.ReceiptService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping(path = "/api")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin()
+//origins = "http://localhost:3000"
 public class ProductController {
 
     Logger logger = LoggerFactory.getLogger(ProductController.class);
     @Autowired
     private ProductRepository repository;
 
+    @Autowired
+    private ReceiptService receiptService;
+
+    @Autowired
+    private ProductService productService;
+
     @GetMapping("/product")
     ReturnValue getAllProducts() {
         return new ReturnValue(1, "success", repository.findAll());
+    }
+
+    @GetMapping("/receipt/{name}")
+    @CrossOrigin(origins = "http://localhost:3000")
+    ReturnValue getAllRecepit(@PathVariable String name) {
+        logger.info("name: "+name);
+        return new ReturnValue(1, "success", receiptService.getAllReceipt(name));
+    }
+
+    @PostMapping("/addReceipt")
+    ReturnValue addReceipt(@RequestParam Map<String, String> body) {
+        return new ReturnValue(1, "success", receiptService.addReceipt(body));
     }
 
     @GetMapping("/product/search/{text}")
@@ -39,11 +59,14 @@ public class ProductController {
     }
 
     @PostMapping("/product/cart")
-    @CrossOrigin(origins = "http://localhost:3000")
-    ReturnValue getCart(@RequestBody ArrayList<String> text) {
+    ReturnValue getCart(@RequestParam Map<String, String> body) {
+        logger.info(body.get("listCart"));
+        String[] pID = body.get("listCart").replace("[","").replace("]","").replace("\"","").split(",");
+
+
         List<Product> findById = new ArrayList<>();
-        if (text.size() > 0) {
-            for (String p : text)
+        if (pID.length > 0) {
+            for (String p : pID)
             {
                 findById.add(repository.findById(Long.parseLong(p)).stream().toList().get(0));
             }
@@ -76,39 +99,49 @@ public class ProductController {
     }
 
     @PostMapping("/manage/addProduct")
-    ReturnValue addProduct(@RequestBody Product product) {
-        List<Product> products = repository.findByName(product.getName());
+    @CrossOrigin(origins = "http://localhost:3000")
+    ReturnValue addProduct(@RequestParam Map<String, String> body) { //@RequestBody Product product
+        if (body.get("name")== "" || body.get("price")=="" || body.get("image")==""|| body.get("model")==""|| body.get("color")==""|| body.get("type")=="" || body.get("option")=="") {
+            return new ReturnValue(0, "Vui lòng điền đầy đủ thông tin sản phẩm", "");
+        }
+        List<Product> products = repository.findByName(body.get("name"));
         if (products.size()>0) {
             return new ReturnValue(0, "Duplicated product name", "");
         }
+        List<String> priceList = Arrays.asList(body.get("price").trim().split("\\s*,\\s*"));
+        List<String> imageList = Arrays.asList(body.get("image").trim().split("\\s*,\\s*"));
+        List<String> colorList = Arrays.asList(body.get("color").trim().split("\\s*,\\s*"));
+        List<String> optionList = Arrays.asList(body.get("option").trim().split("\\s*,\\s*"));
+        if (priceList.size()!=optionList.size()) {
+            return new ReturnValue(0, "Danh sách giá tiền và danh sách cấu hình không đều nhau!", "");
+        }
+        if (colorList.size() != imageList.size()) {
+            return new ReturnValue(0, "Danh sách màu sắc và danh sách hình ảnh không đều nhau!", "");
+        }
         LocalDate tempdate = LocalDate.now();
-        product.setDate(tempdate.getYear()*10000+tempdate.getMonthValue()*100+tempdate.getDayOfMonth());
-        return new ReturnValue(1, "success", repository.save(product));
+        productService.addProduct(new Product(body.get("name"),priceList, colorList, imageList, optionList, "",tempdate.getYear()*10000+tempdate.getMonthValue()*100+tempdate.getDayOfMonth(), body.get("type"), body.get("model")));
+        return new ReturnValue(1, "Thêm sản phẩm thành công!", ""); //repository.save(product)
     }
 
-    @PutMapping("/manage/updateProduct/{id}")
-    ReturnValue updateProduct(@RequestBody Product newProduct, @PathVariable Long id) {
-        ReturnValue rv = repository.findById(id).map(e -> {
-            e.setName(newProduct.getName());
-            e.setDiscount(newProduct.getDiscount());
-            e.setImg(newProduct.getImg());
-            e.setModel(newProduct.getModel());
-            e.setOption(newProduct.getOption());
-            e.setColor(newProduct.getColor());
-            e.setPrice(newProduct.getPrice());
-            e.setType(newProduct.getType());
-            repository.save(e);
-            return new ReturnValue(1, "success", e);
-        }).orElseGet(() -> {
-            Product nP = newProduct;
-            nP.setId(id);
-            return addProduct(newProduct);
-        });
-        return rv;
+    @PostMapping("/manage/updateProduct")
+    @CrossOrigin(origins = "http://localhost:3000")
+    ReturnValue updateProduct(@RequestParam Map<String, String> body) {
+        try {
+            deleteProduct(body);
+            addProduct(body);
+            return new ReturnValue(1, "Chỉnh sửa sản phẩm thành công", "");
+        } catch (Exception e) {
+            return new ReturnValue(0, "Có lổi xảy ra", "");
+        }
+//        if (productService.updateProduct(body)) {
+//            new ReturnValue(1, "Chỉnh sửa sản phẩm thành công", "");
+//        }
+//        return new ReturnValue(0, "Có lổi xảy ra", "");
     }
 
-    @DeleteMapping("/manage/deleteProduct/{id}")
-    ReturnValue deleteProduct(@PathVariable Long id) {
+    @PostMapping("/manage/deleteProduct")
+    ReturnValue deleteProduct(@RequestParam Map<String, String> body) {
+        Long id = Long.parseLong(body.get("id"));
         boolean exists = repository.existsById(id);
         if(exists) {
             repository.deleteById(id);
