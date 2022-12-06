@@ -34,6 +34,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public User saveUser(User user) {
+        if (userRepo.findByName(user.getName()) != null) {
+            return null;
+        }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepo.save(user);
     }
@@ -46,6 +49,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public Role saveRole(Role role) {
+        if (roleRepo.findByName(role.getName()) != null) {
+            return null;
+        }
         return roleRepo.save(role);
     }
 
@@ -53,7 +59,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public void addRoleToUser(String username, String roleName) {
         User user = userRepo.findByName(username);
         Role role = roleRepo.findByName(roleName);
-        user.getRoles().add(role);
+        if (!user.getRoles().contains(role)) {
+            user.getRoles().add(role);
+        }
     }
 
     @Override
