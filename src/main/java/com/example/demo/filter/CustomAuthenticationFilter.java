@@ -61,7 +61,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
             new ObjectMapper().writeValue(response.getOutputStream(), tokens);
         } else {
             Map<String, String> loginFail = new HashMap<>();
-            loginFail.put("message", "User's account is not activated!!");
+            loginFail.put("message", "Tài khoản chưa được kích hoạt!");
             response.setContentType("application/json");
             new ObjectMapper().writeValue(response.getOutputStream(), loginFail);
         }
@@ -71,7 +71,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
         Map<String, String> loginFail = new HashMap<>();
-        loginFail.put("message", "fail");
+        loginFail.put("message", "Đăng nhập không thành công!");
         response.setContentType("application/json");
         new ObjectMapper().writeValue(response.getOutputStream(), loginFail);
     }
