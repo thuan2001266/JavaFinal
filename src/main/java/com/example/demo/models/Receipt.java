@@ -1,7 +1,9 @@
 package com.example.demo.models;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
-import java.util.Collection;
 import java.util.Set;
 
 @Entity
@@ -11,15 +13,16 @@ public class Receipt {
     @GeneratedValue(strategy = GenerationType.AUTO)
     long id;
     @ManyToOne(fetch = FetchType.EAGER)
-    User users;
+//    @OnDelete(action = OnDeleteAction.CASCADE)
+    User user;
     @ManyToMany(fetch = FetchType.EAGER)
     Set<Product> products;
 
     public Receipt() {
     }
 
-    public Receipt(User users, Set<Product> products) {
-        this.users = users;
+    public Receipt(User user, Set<Product> products) {
+        this.user = user;
         this.products = products;
     }
 
@@ -31,12 +34,12 @@ public class Receipt {
         this.id = id;
     }
 
-    public User getUsers() {
-        return users;
+    public User getUser() {
+        return user;
     }
 
-    public void setUsers(User users) {
-        this.users = users;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Set<Product> getProducts() {
@@ -51,7 +54,7 @@ public class Receipt {
     public String toString() {
         return "Receipt{" +
                 "id=" + id +
-                ", users=" + users +
+                ", users=" + user +
                 ", products=" + products +
                 '}';
     }

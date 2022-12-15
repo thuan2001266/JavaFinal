@@ -2,6 +2,7 @@ package com.example.demo.services;
 
 import com.example.demo.models.User;
 import com.example.demo.models.Role;
+import com.example.demo.repositories.ReceiptRepository;
 import com.example.demo.repositories.RoleRepository;
 import com.example.demo.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +25,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     final RoleRepository roleRepo;
 
     @Autowired
+    final ReceiptRepository receiptRepo;
+
+    @Autowired
     final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepo, RoleRepository roleRepo, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepo, RoleRepository roleRepo, ReceiptRepository receiptRepo, PasswordEncoder passwordEncoder) {
         this.userRepo = userRepo;
         this.roleRepo = roleRepo;
+        this.receiptRepo = receiptRepo;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -92,5 +97,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return new org.springframework.security.core.userdetails.User(user.getName(), user.getPassword(), authorities);
     }
 
-
+//    @Override
+//    public void deleteUserByName(String name) throws UsernameNotFoundException {
+//        userRepo.deleteByName(name);
+//    }
+//
+//    @Override
+//    public void deleteUserByEmail(String email) {
+//        User tempUser = userRepo.findByEmail(email);
+//        receiptRepo.deleteAllByUser(tempUser);
+//        userRepo.deleteByEmail(email);
+//    }
 }

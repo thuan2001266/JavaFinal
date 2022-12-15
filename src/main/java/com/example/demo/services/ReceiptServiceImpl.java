@@ -41,7 +41,7 @@ public class ReceiptServiceImpl implements ReceiptService{
         List<Receipt> findReceipt = new ArrayList<>();
         for (Receipt r : receiptList)
         {
-            if (r.getUsers().getName().equals(name)) {
+            if (r.getUser().getName().equals(name)) {
                 findReceipt.add(r);
             }
         }

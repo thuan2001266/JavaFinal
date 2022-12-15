@@ -57,6 +57,15 @@ public class UserController {
         User checkEmail = userService.getByEmail(u.get("email"));
         String password = u.get("password");
         logger.info(u.get("name")+ " "+u.get("email"));
+        if (u.get("name") == null || u.get("name").equals("")) {
+            return new ReturnValue(0, "Không được bỏ trống tài khoản", "");
+        }
+        if (u.get("email") == null || u.get("email").equals("")) {
+            return new ReturnValue(0, "Không được bỏ trống email", "");
+        }
+        if (u.get("password") == null || u.get("password").equals("")) {
+            return new ReturnValue(0, "Không được bỏ trống password", "");
+        }
         if (checkName != null) {
             return new ReturnValue(0, "Username đã tồn tại", "");
         }
