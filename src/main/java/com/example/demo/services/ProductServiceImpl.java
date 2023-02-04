@@ -2,7 +2,6 @@ package com.example.demo.services;
 
 import com.example.demo.controllers.ProductController;
 import com.example.demo.models.Product;
-import com.example.demo.models.ReturnValue;
 import com.example.demo.repositories.ProductRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,7 +60,7 @@ public class ProductServiceImpl implements ProductService{
             e.setDiscount("");
             e.setImg(imageList);
             e.setModel(body.get("model"));
-            e.setOption(optionList);
+            e.setOptionToBuy(optionList);
             e.setColor(colorList);
             e.setPrice(priceList);
             e.setType(body.get("type"));

@@ -1,8 +1,6 @@
 package com.example.demo.models;
 
 import javax.persistence.*;
-import java.lang.reflect.Array;
-import java.util.Arrays;
 import java.util.List;
 @Entity
 @Table(name = "product")
@@ -31,10 +29,10 @@ public class Product {
     @CollectionTable(name = "img", joinColumns = @JoinColumn(name = "productId"))
     @ElementCollection(targetClass=String.class)
     List<String> img;
-    @Column(name = "option")
-    @CollectionTable(name = "option", joinColumns = @JoinColumn(name = "productId"))
+    @Column(name = "optionToBuy")
+    @CollectionTable(name = "optionToBuy", joinColumns = @JoinColumn(name = "productId"))
     @ElementCollection(targetClass=String.class)
-    List<String> option;
+    List<String> optionToBuy;
     String discount;
     int date;
     String type;
@@ -43,12 +41,12 @@ public class Product {
     public Product() {
     }
 
-    public Product(String name, List<String> price, List<String> color, List<String> img, List<String> option, String discount, int date, String type, String model) {
+    public Product(String name, List<String> price, List<String> color, List<String> img, List<String> optionToBuy, String discount, int date, String type, String model) {
         this.name = name;
         this.price = price;
         this.color = color;
         this.img = img;
-        this.option = option;
+        this.optionToBuy = optionToBuy;
         this.discount = discount;
         this.date = date;
         this.type = type;
@@ -95,12 +93,12 @@ public class Product {
         this.img = img;
     }
 
-    public List<String> getOption() {
-        return option;
+    public List<String> getOptionToBuy() {
+        return optionToBuy;
     }
 
-    public void setOption(List<String> option) {
-        this.option = option;
+    public void setOptionToBuy(List<String> optionToBuy) {
+        this.optionToBuy = optionToBuy;
     }
 
     public String getDiscount() {
@@ -143,7 +141,7 @@ public class Product {
                 ", price=" + price +
                 ", color=" + color +
                 ", img=" + img +
-                ", option=" + option +
+                ", option=" + optionToBuy +
                 ", discount='" + discount + '\'' +
                 ", date=" + date +
                 ", type='" + type + '\'' +
