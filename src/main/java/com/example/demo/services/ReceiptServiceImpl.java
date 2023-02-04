@@ -1,7 +1,9 @@
 package com.example.demo.services;
 
 import com.example.demo.controllers.ProductController;
+import com.example.demo.models.OrderInfo;
 import com.example.demo.models.Product;
+import com.example.demo.models.ProductOption;
 import com.example.demo.models.Receipt;
 import com.example.demo.repositories.ProductRepository;
 import com.example.demo.repositories.ReceiptRepository;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -39,26 +42,24 @@ public class ReceiptServiceImpl implements ReceiptService{
         List<Receipt> receiptList= repository.findAll();
         logger.info(receiptList.toString());
         List<Receipt> findReceipt = new ArrayList<>();
-        for (Receipt r : receiptList)
-        {
-            if (r.getUser().getName().equals(name)) {
-                findReceipt.add(r);
+        if (receiptList.size()>0) {
+            logger.info("vao dc if get all receipt");
+            for (Receipt r : receiptList)
+            {
+                if (r.getUser().getName().equals(name)) {
+                    findReceipt.add(r);
+                }
             }
         }
         return findReceipt;
     }
 
     @Override
-    public Receipt addReceipt(Map<String, String> body) {
-        logger.info(body.get("list")+ " "+body.get("user")+ " "+body.get("method"));
-        String[] pID = body.get("list").replace("[","").replace("]","").replace("\"","").split(",");
-        Set<Product> productList = new HashSet<>();
-        if (pID.length > 0) {
-            for (String p : pID)
-            {
-                productList.add(productRepository.findById(Long.parseLong(p)).stream().toList().get(0));
-            }
-        }
-        return repository.save(new Receipt(userService.getUser(body.get("user")), productList));
+    public Receipt addReceipt(OrderInfo orderInfo) {
+        logger.info(orderInfo.getList()[0].toString());
+        Set<ProductOption> list = Arrays.stream(orderInfo.getList()).collect(Collectors.toSet());
+        String user = orderInfo.getUser();
+        String method = orderInfo.getMethod();
+        return repository.save(new Receipt(userService.getUser(user), list, method));
     }
 }

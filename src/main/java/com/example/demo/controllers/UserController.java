@@ -51,7 +51,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    @CrossOrigin()
+//    @CrossOrigin()
     ReturnValue register(@RequestParam Map<String, String> u) {
         User checkName = userService.getUser(u.get("name"));
         User checkEmail = userService.getByEmail(u.get("email"));

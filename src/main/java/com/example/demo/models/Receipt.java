@@ -4,6 +4,9 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -13,17 +16,21 @@ public class Receipt {
     @GeneratedValue(strategy = GenerationType.AUTO)
     long id;
     @ManyToOne(fetch = FetchType.EAGER)
-//    @OnDelete(action = OnDeleteAction.CASCADE)
     User user;
-    @ManyToMany(fetch = FetchType.EAGER)
-    Set<Product> products;
+
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "ProductOption", joinColumns = @JoinColumn(name = "receiptId"))
+    private Set<ProductOption> addresses = new HashSet<>();
+
+    String method;
 
     public Receipt() {
     }
 
-    public Receipt(User user, Set<Product> products) {
+    public Receipt(User user, Set<ProductOption> addresses, String method) {
         this.user = user;
-        this.products = products;
+        this.addresses = addresses;
+        this.method = method;
     }
 
     public long getId() {
@@ -42,20 +49,29 @@ public class Receipt {
         this.user = user;
     }
 
-    public Set<Product> getProducts() {
-        return products;
+    public Set<ProductOption> getAddresses() {
+        return addresses;
     }
 
-    public void setProducts(Set<Product> products) {
-        this.products = products;
+    public void setAddresses(Set<ProductOption> addresses) {
+        this.addresses = addresses;
+    }
+
+    public String getMethod() {
+        return method;
+    }
+
+    public void setMethod(String method) {
+        this.method = method;
     }
 
     @Override
     public String toString() {
         return "Receipt{" +
                 "id=" + id +
-                ", users=" + user +
-                ", products=" + products +
+                ", user=" + user +
+                ", addresses=" + addresses +
+                ", method='" + method + '\'' +
                 '}';
     }
 }

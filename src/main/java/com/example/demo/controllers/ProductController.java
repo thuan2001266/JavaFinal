@@ -1,5 +1,6 @@
 package com.example.demo.controllers;
 
+import com.example.demo.models.OrderInfo;
 import com.example.demo.models.Product;
 import com.example.demo.models.ReturnValue;
 import com.example.demo.repositories.ProductRepository;
@@ -17,7 +18,6 @@ import java.util.*;
 @RestController
 @RequestMapping(path = "/api")
 @CrossOrigin()
-//origins = "http://localhost:3000"
 public class ProductController {
 
     Logger logger = LoggerFactory.getLogger(ProductController.class);
@@ -36,19 +36,20 @@ public class ProductController {
     }
 
     @GetMapping("/receipt/{name}")
-    @CrossOrigin(origins = "http://localhost:3000")
+//    @CrossOrigin(origins = "http://localhost:3000")
     ReturnValue getAllRecepit(@PathVariable String name) {
-        logger.info("name: "+name);
         return new ReturnValue(1, "success", receiptService.getAllReceipt(name));
     }
 
-    @PostMapping("/addReceipt")
-    ReturnValue addReceipt(@RequestParam Map<String, String> body) {
-        return new ReturnValue(1, "success", receiptService.addReceipt(body));
+//    @PostMapping("/addReceipt")
+    @PostMapping(
+            value = "/addReceipt", consumes = "application/json", produces = "application/json")
+    ReturnValue addReceipt(@RequestBody OrderInfo orderInfo) {
+        return new ReturnValue(1, "success", receiptService.addReceipt(orderInfo));
     }
 
     @GetMapping("/product/search/{text}")
-    @CrossOrigin(origins = "http://localhost:3000")
+//    @CrossOrigin(origins = "http://localhost:3000")
     ReturnValue getProductByText(@PathVariable String text) {
         List<Product> findByText = repository.findByNameContains(text);
         if (findByText.size() > 0) {
@@ -99,7 +100,7 @@ public class ProductController {
     }
 
     @PostMapping("/manage/addProduct")
-    @CrossOrigin(origins = "http://localhost:3000")
+//    @CrossOrigin(origins = "http://localhost:3000")
     ReturnValue addProduct(@RequestParam Map<String, String> body) { //@RequestBody Product product
         if (body.get("name")== "" || body.get("price")=="" || body.get("image")==""|| body.get("model")==""|| body.get("color")==""|| body.get("type")=="" || body.get("option")=="") {
             return new ReturnValue(0, "Vui lòng điền đầy đủ thông tin sản phẩm", "");
@@ -124,7 +125,7 @@ public class ProductController {
     }
 
     @PostMapping("/manage/updateProduct")
-    @CrossOrigin(origins = "http://localhost:3000")
+//    @CrossOrigin(origins = "http://localhost:3000")
     ReturnValue updateProduct(@RequestParam Map<String, String> body) {
         try {
             deleteProduct(body);

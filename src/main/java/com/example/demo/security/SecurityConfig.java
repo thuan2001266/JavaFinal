@@ -20,6 +20,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 import static org.springframework.http.HttpMethod.*;
 
@@ -50,7 +51,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers("/api/register").permitAll();
         http.authorizeRequests().antMatchers("/api/verificate/**").permitAll();
         http.authorizeRequests().antMatchers("/api/product").permitAll();
-//        http.authorizeRequests().antMatchers("/api/product/cart").permitAll();
         http.authorizeRequests().antMatchers("/api/product/**").permitAll();
         http.authorizeRequests().antMatchers("/api/addReceipt").permitAll();
         http.authorizeRequests().antMatchers("/api/receipt/**").permitAll();
@@ -63,28 +63,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
-//    @Bean
-//    CorsConfigurationSource corsConfigurationSource() {
-//        CorsConfiguration configuration = new CorsConfiguration();
-//        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000/"));
-//        configuration.setAllowedMethods(Arrays.asList("GET","POST", "DELETE", "UPDATE"));
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        source.registerCorsConfiguration("/**", configuration);
-//        return source;
-//    }
-
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         final CorsConfiguration config = new CorsConfiguration();
-
+//        config.setAllowedOrigins(Collections.singletonList(CorsConfiguration.ALL));
         config.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
         config.setAllowedMethods(Arrays.asList("GET", "POST", "OPTIONS", "DELETE", "PUT", "PATCH"));
         config.setAllowCredentials(true);
         config.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
-
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
-
         return source;
     }
 
@@ -93,44 +81,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
-
-//    @Bean
-//    public CorsConfigurationSource corsConfigurationSource() {
-//        final CorsConfiguration configuration = new CorsConfiguration();
-//        configuration.setAllowedOrigins(ImmutableList.of("*"));
-//        configuration.setAllowedMethods(ImmutableList.of("HEAD",
-//                "GET", "POST", "PUT", "DELETE", "PATCH"));
-//        // setAllowCredentials(true) is important, otherwise:
-//        // The value of the 'Access-Control-Allow-Origin' header in the response must not be the wildcard '*' when the request's credentials mode is 'include'.
-//        configuration.setAllowCredentials(true);
-//        // setAllowedHeaders is important! Without it, OPTIONS preflight request
-//        // will fail with 403 Invalid CORS request
-//        configuration.setAllowedHeaders(ImmutableList.of("Authorization", "Cache-Control", "Content-Type"));
-//        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        source.registerCorsConfiguration("/**", configuration);
-//        return source;
-//    }
-
-//    @Bean
-//    public CorsConfigurationSource corsConfigurationSource() {
-//        final CorsConfiguration config = new CorsConfiguration();
-//
-//        config.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
-//        config.setAllowedMethods(Arrays.asList("GET", "POST", "OPTIONS", "DELETE", "PUT", "PATCH"));
-//        config.setAllowCredentials(true);
-//        config.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
-//
-//        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        source.registerCorsConfiguration("/**", config);
-//
-//        return source;
-//    }
-//    @Bean
-//    SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
-//        http.cors(cors -> cors.disable());
-//        return http.build();
-//    }
-
-
-
 }
