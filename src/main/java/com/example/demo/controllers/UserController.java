@@ -32,7 +32,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping(path = "/api")
-@CrossOrigin()
+@CrossOrigin("http://botzone.vercel.app")
 public class UserController {
     Logger logger = LoggerFactory.getLogger(ProductController.class);
 

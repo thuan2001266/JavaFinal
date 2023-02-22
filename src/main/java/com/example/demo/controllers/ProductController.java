@@ -17,7 +17,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping(path = "/api")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://botzone.vercel.app")
 public class ProductController {
 
     Logger logger = LoggerFactory.getLogger(ProductController.class);
