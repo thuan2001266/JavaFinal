@@ -96,16 +96,4 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         });
         return new org.springframework.security.core.userdetails.User(user.getName(), user.getPassword(), authorities);
     }
-
-//    @Override
-//    public void deleteUserByName(String name) throws UsernameNotFoundException {
-//        userRepo.deleteByName(name);
-//    }
-//
-//    @Override
-//    public void deleteUserByEmail(String email) {
-//        User tempUser = userRepo.findByEmail(email);
-//        receiptRepo.deleteAllByUser(tempUser);
-//        userRepo.deleteByEmail(email);
-//    }
 }

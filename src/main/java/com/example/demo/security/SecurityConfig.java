@@ -50,6 +50,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers("/login").permitAll();
         http.authorizeRequests().antMatchers("/api/register").permitAll();
         http.authorizeRequests().antMatchers("/api/verificate/**").permitAll();
+        http.authorizeRequests().antMatchers("/api/refreshToken").permitAll();
         http.authorizeRequests().antMatchers("/api/product").permitAll();
         http.authorizeRequests().antMatchers("/api/product/**").permitAll();
         http.authorizeRequests().antMatchers("/api/addReceipt").permitAll();
@@ -68,7 +69,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         final CorsConfiguration config = new CorsConfiguration();
 //        config.setAllowedOrigins(Collections.singletonList(CorsConfiguration.ALL));
         config.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
-        config.setAllowedOrigins(Arrays.asList("http://botzone.vercel.app"));
+//        config.setAllowedOrigins(Arrays.asList("http://botzone.vercel.app"));
         config.setAllowedMethods(Arrays.asList("GET", "POST", "OPTIONS", "DELETE", "PUT", "PATCH"));
         config.setAllowCredentials(true);
         config.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));

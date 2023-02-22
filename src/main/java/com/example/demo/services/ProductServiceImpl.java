@@ -64,7 +64,6 @@ public class ProductServiceImpl implements ProductService{
             e.setColor(colorList);
             e.setPrice(priceList);
             e.setType(body.get("type"));
-            logger.info(e.toString());
             repository.save(e);
             return true;
         }

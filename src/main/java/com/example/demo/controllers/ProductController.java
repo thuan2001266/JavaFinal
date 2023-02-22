@@ -17,7 +17,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping(path = "/api")
-@CrossOrigin()
+@CrossOrigin(origins = "http://localhost:3000")
 public class ProductController {
 
     Logger logger = LoggerFactory.getLogger(ProductController.class);
@@ -36,12 +36,10 @@ public class ProductController {
     }
 
     @GetMapping("/receipt/{name}")
-//    @CrossOrigin(origins = "http://localhost:3000")
     ReturnValue getAllRecepit(@PathVariable String name) {
         return new ReturnValue(1, "success", receiptService.getAllReceipt(name));
     }
 
-//    @PostMapping("/addReceipt")
     @PostMapping(
             value = "/addReceipt", consumes = "application/json", produces = "application/json")
     ReturnValue addReceipt(@RequestBody OrderInfo orderInfo) {
@@ -49,7 +47,7 @@ public class ProductController {
     }
 
     @GetMapping("/product/search/{text}")
-//    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "http://localhost:3000")
     ReturnValue getProductByText(@PathVariable String text) {
         List<Product> findByText = repository.findByNameContains(text);
         if (findByText.size() > 0) {
@@ -61,17 +59,16 @@ public class ProductController {
 
     @PostMapping("/product/cart")
     ReturnValue getCart(@RequestParam Map<String, String> body) {
-        logger.info(body.get("listCart"));
         String[] pID = body.get("listCart").replace("[","").replace("]","").replace("\"","").split(",");
-
-
         List<Product> findById = new ArrayList<>();
+        logger.info(body.get("listCart"));
         if (pID.length > 0) {
             for (String p : pID)
             {
                 findById.add(repository.findById(Long.parseLong(p)).stream().toList().get(0));
             }
         }
+        logger.info(findById.toString());
         if (findById.size() > 0) {
             return new ReturnValue(1, "success", findById);
         } else {
@@ -103,11 +100,11 @@ public class ProductController {
 //    @CrossOrigin(origins = "http://localhost:3000")
     ReturnValue addProduct(@RequestParam Map<String, String> body) { //@RequestBody Product product
         if (body.get("name")== "" || body.get("price")=="" || body.get("image")==""|| body.get("model")==""|| body.get("color")==""|| body.get("type")=="" || body.get("option")=="") {
-            return new ReturnValue(0, "Vui lòng điền đầy đủ thông tin sản phẩm", "");
+            return new ReturnValue(0, "Vui lòng điền đầy đủ thông tin sản phẩm!", "");
         }
         List<Product> products = repository.findByName(body.get("name"));
         if (products.size()>0) {
-            return new ReturnValue(0, "Duplicated product name", "");
+            return new ReturnValue(0, "Tên sản phẩm bị trùng!", "");
         }
         List<String> priceList = Arrays.asList(body.get("price").trim().split("\\s*,\\s*"));
         List<String> imageList = Arrays.asList(body.get("image").trim().split("\\s*,\\s*"));
@@ -146,8 +143,8 @@ public class ProductController {
         boolean exists = repository.existsById(id);
         if(exists) {
             repository.deleteById(id);
-            return new ReturnValue(1, "Deleted product by id "+ id, "");
+            return new ReturnValue(1, "Đã xóa sản phẩm với id "+ id, "");
         }
-        return new ReturnValue(0, "Can not deleted product by id "+ id, "");
+        return new ReturnValue(0, "Không thể xóa saản phẩm với id "+ id, "");
     }
 }

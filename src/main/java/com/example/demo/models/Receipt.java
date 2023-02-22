@@ -24,13 +24,16 @@ public class Receipt {
 
     String method;
 
+    String mili;
+
     public Receipt() {
     }
 
-    public Receipt(User user, Set<ProductOption> addresses, String method) {
+    public Receipt(User user, Set<ProductOption> addresses, String method, String mili) {
         this.user = user;
         this.addresses = addresses;
         this.method = method;
+        this.mili = mili;
     }
 
     public long getId() {
@@ -65,6 +68,14 @@ public class Receipt {
         this.method = method;
     }
 
+    public String getMili() {
+        return mili;
+    }
+
+    public void setMili(String mili) {
+        this.mili = mili;
+    }
+
     @Override
     public String toString() {
         return "Receipt{" +
@@ -72,6 +83,7 @@ public class Receipt {
                 ", user=" + user +
                 ", addresses=" + addresses +
                 ", method='" + method + '\'' +
+                ", mili=" + mili +
                 '}';
     }
 }
