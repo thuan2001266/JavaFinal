@@ -96,12 +96,13 @@ public class ProductController {
         }
     }
 
-    @PostMapping("/manage/addProduct")
+    @PostMapping("/manage/createProduct")
 //    @CrossOrigin(origins = "http://localhost:3000")
     ReturnValue addProduct(@RequestParam Map<String, String> body) { //@RequestBody Product product
-        if (body.get("name")== "" || body.get("price")=="" || body.get("image")==""|| body.get("model")==""|| body.get("color")==""|| body.get("type")=="" || body.get("option")=="") {
-            return new ReturnValue(0, "Vui lòng điền đầy đủ thông tin sản phẩm!", "");
-        }
+//        if (body.get("name")== "" || body.get("price")=="" || body.get("image")==""|| body.get("model")==""|| body.get("color")==""|| body.get("type")=="" || body.get("option")=="") {
+//            return new ReturnValue(0, "Vui lòng điền đầy đủ thông tin sản phẩm!", "");
+//        }
+        logger.info(body.toString());
         List<Product> products = repository.findByName(body.get("name"));
         if (products.size()>0) {
             return new ReturnValue(0, "Tên sản phẩm bị trùng!", "");
@@ -110,26 +111,29 @@ public class ProductController {
         List<String> imageList = Arrays.asList(body.get("image").trim().split("\\s*,\\s*"));
         List<String> colorList = Arrays.asList(body.get("color").trim().split("\\s*,\\s*"));
         List<String> optionList = Arrays.asList(body.get("option").trim().split("\\s*,\\s*"));
-        if (priceList.size()!=optionList.size()) {
-            return new ReturnValue(0, "Danh sách giá tiền và danh sách cấu hình không đều nhau!", "");
-        }
-        if (colorList.size() != imageList.size()) {
-            return new ReturnValue(0, "Danh sách màu sắc và danh sách hình ảnh không đều nhau!", "");
-        }
-        LocalDate tempdate = LocalDate.now();
-        productService.addProduct(new Product(body.get("name"),priceList, colorList, imageList, optionList, "",tempdate.getYear()*10000+tempdate.getMonthValue()*100+tempdate.getDayOfMonth(), body.get("type"), body.get("model")));
-        return new ReturnValue(1, "Thêm sản phẩm thành công!", ""); //repository.save(product)
+//        if (priceList.size()!=optionList.size()) {
+//            return new ReturnValue(0, "Danh sách giá tiền và danh sách cấu hình không đều nhau!", "");
+//        }
+//        if (colorList.size() != imageList.size()) {
+//            return new ReturnValue(0, "Danh sách màu sắc và danh sách hình ảnh không đều nhau!", "");
+//        }
+//        LocalDate tempdate = LocalDate.now();
+        productService.addProduct(new Product(body.get("name"),priceList, colorList, imageList, optionList, "",Long.parseLong(body.get("date")), body.get("type"), body.get("model"))); //tempdate.getYear()*10000+tempdate.getMonthValue()*100+tempdate.getDayOfMonth()tempdate.getYear()*10000+tempdate.getMonthValue()*100+tempdate.getDayOfMonth()
+//        return new ReturnValue(1, "Thêm sản phẩm thành công!", ""); //repository.save(product)
+        return getAllProducts();
     }
 
     @PostMapping("/manage/updateProduct")
 //    @CrossOrigin(origins = "http://localhost:3000")
     ReturnValue updateProduct(@RequestParam Map<String, String> body) {
+        logger.info(body.toString());
         try {
             deleteProduct(body);
             addProduct(body);
-            return new ReturnValue(1, "Chỉnh sửa sản phẩm thành công", "");
+//            return new ReturnValue(1, "Chỉnh sửa sản phẩm thành công", "");
+            return getAllProducts();
         } catch (Exception e) {
-            return new ReturnValue(0, "Có lổi xảy ra", "");
+            return new ReturnValue(0, "Có lổi xảy ra"+e.toString(), "");
         }
 //        if (productService.updateProduct(body)) {
 //            new ReturnValue(1, "Chỉnh sửa sản phẩm thành công", "");
@@ -141,10 +145,12 @@ public class ProductController {
     ReturnValue deleteProduct(@RequestParam Map<String, String> body) {
         Long id = Long.parseLong(body.get("id"));
         boolean exists = repository.existsById(id);
+//        logger.info(String.valueOf(exists));
         if(exists) {
             repository.deleteById(id);
-            return new ReturnValue(1, "Đã xóa sản phẩm với id "+ id, "");
+//            return new ReturnValue(1, "Đã xóa sản phẩm với id "+ id, "");
+            return getAllProducts();
         }
-        return new ReturnValue(0, "Không thể xóa saản phẩm với id "+ id, "");
+        return new ReturnValue(0, "Không thể xóa sản phẩm với id "+ id, "");
     }
 }

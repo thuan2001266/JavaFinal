@@ -34,14 +34,14 @@ public class Product {
     @ElementCollection(targetClass=String.class)
     List<String> optionToBuy;
     String discount;
-    int date;
+    long date;
     String type;
     String model;
 
     public Product() {
     }
 
-    public Product(String name, List<String> price, List<String> color, List<String> img, List<String> optionToBuy, String discount, int date, String type, String model) {
+    public Product(String name, List<String> price, List<String> color, List<String> img, List<String> optionToBuy, String discount, long date, String type, String model) {
         this.name = name;
         this.price = price;
         this.color = color;
@@ -109,11 +109,11 @@ public class Product {
         this.discount = discount;
     }
 
-    public int getDate() {
+    public long getDate() {
         return date;
     }
 
-    public void setDate(int date) {
+    public void setDate(long date) {
         this.date = date;
     }
 

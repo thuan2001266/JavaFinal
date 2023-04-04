@@ -35,7 +35,7 @@ public class ProductServiceImpl implements ProductService{
             return false;
         }
         LocalDate tempdate = LocalDate.now();
-        product.setDate(tempdate.getYear()*10000+tempdate.getMonthValue()*100+tempdate.getDayOfMonth());
+//        product.setDate((long) (tempdate.getYear()*10000+tempdate.getMonthValue()*100+tempdate.getDayOfMonth()));
         repository.save(product);
         return true;
     }

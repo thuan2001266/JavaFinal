@@ -72,17 +72,8 @@ public class UserController {
         User checkName = userService.getUser(u.get("name"));
         User checkEmail = userService.getByEmail(u.get("email"));
         String password = u.get("password");
-        if (u.get("name") == null || u.get("name").equals("")) {
-            return new ReturnValue(0, "Không được bỏ trống tài khoản", "");
-        }
         if (u.get("email") == null || u.get("email").equals("")) {
             return new ReturnValue(0, "Không được bỏ trống email", "");
-        }
-        if (u.get("password") == null || u.get("password").equals("")) {
-            return new ReturnValue(0, "Không được bỏ trống password", "");
-        }
-        if (checkName != null) {
-            return new ReturnValue(0, "Username đã tồn tại", "");
         }
         if (checkEmail != null) {
             return new ReturnValue(0, "Email đã được sử dụng", "");
@@ -95,7 +86,19 @@ public class UserController {
                 return new ReturnValue(0, "Email không hợp lệ", "");
             }
         }
-        if (password.length()<7) {
+        if (u.get("name") == null || u.get("name").equals("")) {
+            return new ReturnValue(0, "Không được bỏ trống tài khoản", "");
+        }
+        if (u.get("name").length() < 6) {
+            return new ReturnValue(0, "Tài khoản cần chứa nhiều hơn 6 ký tự", "");
+        }
+        if (checkName != null) {
+            return new ReturnValue(0, "Username đã tồn tại", "");
+        }
+        if (u.get("password") == null || u.get("password").equals("")) {
+            return new ReturnValue(0, "Không được bỏ trống password", "");
+        }
+        if (password.length()<8) {
             return new ReturnValue(0, "Mật khẩu cần có độ dài ít nhất 8 ký tự", "");
         }
         User user = userService.saveUser(new User(u.get("name"), u.get("email"), u.get("password"), new ArrayList<Role>()));
@@ -113,7 +116,7 @@ public class UserController {
         message.setText("Hello! This is your verification link: http://localhost:3000/verification?token=" + verificationToken.getToken());
 
         mailSender.send(message);
-        return new ReturnValue(1, "Tài khoản được đăng ký thành công", "");
+        return new ReturnValue(1, "Tài khoản được đăng ký thành công, vui lòng kiểm tra email và làm theo hướng dẫn để kích hoạt tài khoản", "");
     }
 
     @PostMapping("/verificate")

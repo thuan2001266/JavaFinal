@@ -56,7 +56,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers("/api/addReceipt").permitAll();
         http.authorizeRequests().antMatchers("/api/receipt/**").permitAll();
         http.authorizeRequests().antMatchers("/api/manage/**").hasAnyAuthority("ROLE_ADMIN");
-        http.authorizeRequests().antMatchers(POST, "api/manage/addProduct").hasAnyAuthority("ROLE_ADMIN");
+        http.authorizeRequests().antMatchers(POST, "api/manage/createProduct").hasAnyAuthority("ROLE_ADMIN");
         http.authorizeRequests().antMatchers(POST, "/api/manage/updateProduct").hasAnyAuthority("ROLE_ADMIN");
         http.authorizeRequests().antMatchers(POST, "api/manage/deleteProduct").hasAnyAuthority("ROLE_ADMIN");
         http.authorizeRequests().anyRequest().authenticated();
@@ -69,7 +69,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         final CorsConfiguration config = new CorsConfiguration();
 //        config.setAllowedOrigins(Collections.singletonList(CorsConfiguration.ALL));
         config.setAllowedOrigins(Arrays.asList("https://botzone.vercel.app"));
-//        config.setAllowedOrigins(Arrays.asList("http://botzone.vercel.app"));
+//        config.setAllowedOrigins(Arrays.asList("http://localhost:3000/"));
         config.setAllowedMethods(Arrays.asList("GET", "POST", "OPTIONS", "DELETE", "PUT", "PATCH"));
         config.setAllowCredentials(true);
         config.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
