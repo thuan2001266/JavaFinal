@@ -13,10 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -50,13 +46,13 @@ public class UserController {
     }
 
     @PostMapping("/user/save")
-    public ReturnValue saveUser(@RequestBody User user) {
-        return new ReturnValue(1, "success", userService.saveUser(user));
+    public ReturnValue saveUser(@RequestBody AppUser appUser) {
+        return new ReturnValue(1, "success", userService.saveUser(appUser));
     }
 
     @PostMapping("/role/save")
     public ReturnValue saveRole(@RequestBody Role role) {
-        User user = userService.getUser("asd");
+        AppUser appUser = userService.getUser("asd");
         return new ReturnValue(1, "success", userService.saveRole(role));
     }
 
@@ -69,8 +65,8 @@ public class UserController {
     @PostMapping("/register")
 //    @CrossOrigin()
     ReturnValue register(@RequestParam Map<String, String> u) {
-        User checkName = userService.getUser(u.get("name"));
-        User checkEmail = userService.getByEmail(u.get("email"));
+        AppUser checkName = userService.getUser(u.get("name"));
+        AppUser checkEmail = userService.getByEmail(u.get("email"));
         String password = u.get("password");
         if (u.get("email") == null || u.get("email").equals("")) {
             return new ReturnValue(0, "Không được bỏ trống email", "");
@@ -101,17 +97,17 @@ public class UserController {
         if (password.length()<8) {
             return new ReturnValue(0, "Mật khẩu cần có độ dài ít nhất 8 ký tự", "");
         }
-        User user = userService.saveUser(new User(u.get("name"), u.get("email"), u.get("password"), new ArrayList<Role>()));
+        AppUser appUser = userService.saveUser(new AppUser(u.get("name"), u.get("email"), u.get("password"), new ArrayList<Role>()));
         userService.addRoleToUser(u.get("name"), "ROLE_USER");
 
         String tokenGenerate = UUID.randomUUID().toString();
 //        VerificationToken verificationToken = new VerificationToken(tokenGenerate);
-        VerificationToken verificationToken = tokenService.createToken(tokenGenerate, user);
+        VerificationToken verificationToken = tokenService.createToken(tokenGenerate, appUser);
 
         SimpleMailMessage message = new SimpleMailMessage();
 
         message.setFrom("vthuan26655@gmail.com");
-        message.setTo(user.getEmail());
+        message.setTo(appUser.getEmail());
         message.setSubject("ACCOUNT VERIFICATION EMAIL");
         message.setText("Hello! This is your verification link: http://localhost:3000/verification?token=" + verificationToken.getToken());
 
@@ -141,10 +137,10 @@ public class UserController {
                 JWTVerifier jwtVerifier = JWT.require(algorithm).build();
                 DecodedJWT decodedJWT = jwtVerifier.verify(refresh_token);
                 String username = decodedJWT.getSubject();
-                User user = userService.getUser(username);
-                String access_token = JWT.create().withSubject(user.getName()).withExpiresAt(new Date(System.currentTimeMillis() +10*60*1000))
+                AppUser appUser = userService.getUser(username);
+                String access_token = JWT.create().withSubject(appUser.getName()).withExpiresAt(new Date(System.currentTimeMillis() +10*60*1000))
                         .withIssuer(request.getRequestURL().toString())
-                        .withClaim("roles", user.getRoles().stream().map(Role::getName).collect(Collectors.joining(", ")))
+                        .withClaim("roles", appUser.getRoles().stream().map(Role::getName).collect(Collectors.joining(", ")))
                         .sign(algorithm);
                 Map<String, String> tokens = new HashMap<>();
                 tokens.put("access_token", access_token);

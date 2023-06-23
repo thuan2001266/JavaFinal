@@ -1,6 +1,6 @@
 package com.example.demo.services;
 
-import com.example.demo.models.User;
+import com.example.demo.models.AppUser;
 import com.example.demo.models.Role;
 import com.example.demo.repositories.ReceiptRepository;
 import com.example.demo.repositories.RoleRepository;
@@ -38,18 +38,18 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public User saveUser(User user) {
-        if (userRepo.findByName(user.getName()) != null) {
+    public AppUser saveUser(AppUser appUser) {
+        if (userRepo.findByName(appUser.getName()) != null) {
             return null;
         }
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepo.save(user);
+        appUser.setPassword(passwordEncoder.encode(appUser.getPassword()));
+        return userRepo.save(appUser);
     }
 
     @Override
     public void enableUser(String username) {
-        User user = userRepo.findByName(username);
-        user.setEnabled(true);
+        AppUser appUser = userRepo.findByName(username);
+        appUser.setEnabled(true);
     }
 
     @Override
@@ -62,38 +62,38 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public void addRoleToUser(String username, String roleName) {
-        User user = userRepo.findByName(username);
+        AppUser appUser = userRepo.findByName(username);
         Role role = roleRepo.findByName(roleName);
-        if (!user.getRoles().contains(role)) {
-            user.getRoles().add(role);
+        if (!appUser.getRoles().contains(role)) {
+            appUser.getRoles().add(role);
         }
     }
 
     @Override
-    public User getUser(String username) {
+    public AppUser getUser(String username) {
         return userRepo.findByName(username);
     }
 
     @Override
-    public User getByEmail(String email) {
+    public AppUser getByEmail(String email) {
         return userRepo.findByEmail(email);
     }
 
     @Override
-    public List<User> getUsers() {
+    public List<AppUser> getUsers() {
         return userRepo.findAll();
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepo.findByName(username);
-        if (user == null) {
+        AppUser appUser = userRepo.findByName(username);
+        if (appUser == null) {
             throw new UsernameNotFoundException("User not found");
         }
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        user.getRoles().forEach(role -> {
+        appUser.getRoles().forEach(role -> {
             authorities.add(new SimpleGrantedAuthority(role.getName()));
         });
-        return new org.springframework.security.core.userdetails.User(user.getName(), user.getPassword(), authorities);
+        return new org.springframework.security.core.userdetails.User(appUser.getName(), appUser.getPassword(), authorities);
     }
 }

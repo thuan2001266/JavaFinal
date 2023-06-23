@@ -1,12 +1,7 @@
 package com.example.demo.models;
 
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-
 import javax.persistence.*;
-import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -16,7 +11,7 @@ public class Receipt {
     @GeneratedValue(strategy = GenerationType.AUTO)
     long id;
     @ManyToOne(fetch = FetchType.EAGER)
-    User user;
+    AppUser appUser;
 
     @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "ProductOption", joinColumns = @JoinColumn(name = "receiptId"))
@@ -29,8 +24,8 @@ public class Receipt {
     public Receipt() {
     }
 
-    public Receipt(User user, Set<ProductOption> addresses, String method, String mili) {
-        this.user = user;
+    public Receipt(AppUser appUser, Set<ProductOption> addresses, String method, String mili) {
+        this.appUser = appUser;
         this.addresses = addresses;
         this.method = method;
         this.mili = mili;
@@ -44,12 +39,12 @@ public class Receipt {
         this.id = id;
     }
 
-    public User getUser() {
-        return user;
+    public AppUser getUser() {
+        return appUser;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUser(AppUser appUser) {
+        this.appUser = appUser;
     }
 
     public Set<ProductOption> getAddresses() {
@@ -80,7 +75,7 @@ public class Receipt {
     public String toString() {
         return "Receipt{" +
                 "id=" + id +
-                ", user=" + user +
+                ", user=" + appUser +
                 ", addresses=" + addresses +
                 ", method='" + method + '\'' +
                 ", mili=" + mili +

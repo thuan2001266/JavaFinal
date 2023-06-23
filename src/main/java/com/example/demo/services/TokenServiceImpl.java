@@ -1,6 +1,6 @@
 package com.example.demo.services;
 
-import com.example.demo.models.User;
+import com.example.demo.models.AppUser;
 import com.example.demo.models.VerificationToken;
 import com.example.demo.repositories.TokenRepository;
 import com.example.demo.repositories.UserRepository;
@@ -24,9 +24,9 @@ public class TokenServiceImpl implements TokenService{
     }
 
     @Override
-    public VerificationToken createToken(String token, User user) {
+    public VerificationToken createToken(String token, AppUser appUser) {
         VerificationToken verificationToken = new VerificationToken(token);
-        verificationToken.setUser(user);
+        verificationToken.setUser(appUser);
         return tokenRepository.save(verificationToken);
     }
 

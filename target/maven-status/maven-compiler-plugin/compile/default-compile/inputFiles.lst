@@ -1,4 +1,5 @@
 C:\Code\Intelij\JavaFinal\src\main\java\com\example\demo\services\UserService.java
+C:\Code\Intelij\JavaFinal\src\main\java\com\example\demo\models\AppUser.java
 C:\Code\Intelij\JavaFinal\src\main\java\com\example\demo\models\Receipt.java
 C:\Code\Intelij\JavaFinal\src\main\java\com\example\demo\models\RegisterInfo.java
 C:\Code\Intelij\JavaFinal\src\main\java\com\example\demo\services\ReceiptService.java
@@ -26,5 +27,4 @@ C:\Code\Intelij\JavaFinal\src\main\java\com\example\demo\models\ProductOption.ja
 C:\Code\Intelij\JavaFinal\src\main\java\com\example\demo\models\VerificationToken.java
 C:\Code\Intelij\JavaFinal\src\main\java\com\example\demo\filter\CustomAuthorizationFilter.java
 C:\Code\Intelij\JavaFinal\src\main\java\com\example\demo\repositories\CommentRepository.java
-C:\Code\Intelij\JavaFinal\src\main\java\com\example\demo\models\User.java
 C:\Code\Intelij\JavaFinal\src\main\java\com\example\demo\models\Product.java

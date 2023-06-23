@@ -1,19 +1,18 @@
 package com.example.demo.services;
 
-import com.example.demo.models.User;
+import com.example.demo.models.AppUser;
 import com.example.demo.models.Role;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.List;
 
 public interface UserService {
-    User saveUser(User user);
+    AppUser saveUser(AppUser appUser);
     Role saveRole(Role role);
     void addRoleToUser(String username, String roleName);
-    User getUser(String username);
-    List<User> getUsers();
+    AppUser getUser(String username);
+    List<AppUser> getUsers();
     void enableUser(String username);
-    User getByEmail(String email);
+    AppUser getByEmail(String email);
 
 //    void deleteUserByName(String name);
 //

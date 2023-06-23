@@ -1,11 +1,10 @@
 package com.example.demo;
 
+import com.example.demo.models.AppUser;
 import com.example.demo.models.Product;
 import com.example.demo.models.Role;
-import com.example.demo.models.User;
 import com.example.demo.services.ProductService;
 import com.example.demo.services.UserService;
-import org.apache.catalina.filters.CorsFilter;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -13,8 +12,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -51,8 +48,8 @@ public class FinalApplication {
 			userService.saveRole(new Role( "ROLE_USER"));
 			userService.saveRole(new Role( "ROLE_ADMIN"));
 
-			userService.saveUser(new User("admin", "admin@gmail.com", "123123123", new ArrayList<Role>()));
-			userService.saveUser(new User("user", "email2@gmail.com", "123123123", new ArrayList<Role>()));
+			userService.saveUser(new AppUser("admin", "admin@gmail.com", "123123123", new ArrayList<Role>()));
+			userService.saveUser(new AppUser("user", "email2@gmail.com", "123123123", new ArrayList<Role>()));
 
 			userService.addRoleToUser("admin", "ROLE_ADMIN");
 			userService.addRoleToUser("admin", "ROLE_USER");
